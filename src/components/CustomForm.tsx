@@ -1,13 +1,54 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
+import { z } from 'zod';
 
 
-const CustomForm = () =>{
-  
+
+const UserData = z.object({
+  fistName: z.string(),
+  lastName: z.string(),
+  email: z.string(),
+  country: z.string(),
+  streetAddress: z.string(),
+  city: z.string(),
+  state: z.string(),
+  postCode: z.string(),
+  Offers: z.string(),
+  pushNotifications: z.string()
+});
+type TUserData = z.infer<typeof UserData>;
+
+const CustomForm = () => {
+  const [userData, setUserData] = useState({})
+  useEffect(() => { }, [userData])
+
+  function setData(e) {
+    setUserData((preData) => ({ ...preData, [e.target.name]: e.target.value }))
+    console.log(e.target.name)
+
+    console.log(e.target)
+
+  }
+
+  async function sendPost() {
+    const url = "https://x3uwdimix54uvgjtzcxrj5p4fe0ywweo.lambda-url.ap-south-1.on.aws/";
+    try {
+      const response = await fetch(url, { method: "POST", body: JSON.stringify(userData) });
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+
+      const json = await response.json();
+      console.log(json,"-----json");
+    } catch (error) {
+      console.error(error.message);
+    }
+  }
+
   return (
     <div>
-      <div className="space-y-12">
-      
-        <div className="border-b border-gray-900/10 pb-12">
+      <div className="space-y-12 border p-10">
+
+        <div className=" border-gray-900/10 pb-12">
           <h2 className="text-base font-semibold leading-7 text-gray-900">Personal Information</h2>
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
             <div className="sm:col-span-3">
@@ -17,7 +58,8 @@ const CustomForm = () =>{
               <div className="mt-2">
                 <input
                   type="text"
-                  name="first-name"
+                  name="firstName"
+                  onChange={setData}
                   id="first-name"
                   autoComplete="given-name"
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -32,8 +74,9 @@ const CustomForm = () =>{
               <div className="mt-2">
                 <input
                   type="text"
-                  name="last-name"
+                  name="lastName"
                   id="last-name"
+                  onChange={setData}
                   autoComplete="family-name"
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
@@ -49,6 +92,8 @@ const CustomForm = () =>{
                   id="email"
                   name="email"
                   type="email"
+                  onChange={setData}
+
                   autoComplete="email"
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
@@ -63,6 +108,8 @@ const CustomForm = () =>{
                 <select
                   id="country"
                   name="country"
+                  onChange={setData}
+
                   autoComplete="country-name"
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6"
                 >
@@ -80,8 +127,10 @@ const CustomForm = () =>{
               <div className="mt-2">
                 <input
                   type="text"
-                  name="street-address"
+                  name="streetAddress"
                   id="street-address"
+                  onChange={setData}
+
                   autoComplete="street-address"
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
@@ -97,6 +146,8 @@ const CustomForm = () =>{
                   type="text"
                   name="city"
                   id="city"
+                  onChange={setData}
+
                   autoComplete="address-level2"
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
@@ -112,6 +163,8 @@ const CustomForm = () =>{
                   type="text"
                   name="region"
                   id="region"
+                  onChange={setData}
+
                   autoComplete="address-level1"
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
@@ -125,8 +178,10 @@ const CustomForm = () =>{
               <div className="mt-2">
                 <input
                   type="text"
-                  name="postal-code"
+                  name="postalCode"
                   id="postal-code"
+                  onChange={setData}
+
                   autoComplete="postal-code"
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
@@ -135,19 +190,21 @@ const CustomForm = () =>{
           </div>
         </div>
 
-        <div className="border-b border-gray-900/10 pb-12">
+        <div className=" border-gray-900/10 pb-12">
           <h2 className="text-base font-semibold leading-7 text-gray-900">Notifications</h2>
-         
+
 
           <div className="mt-10 space-y-10">
             <fieldset>
-              <div className="mt-2 space-y-6">   
+              <div className="mt-2 space-y-6">
                 <div className="relative flex gap-x-3">
                   <div className="flex h-6 items-center">
                     <input
                       id="offers"
                       name="offers"
                       type="checkbox"
+                      onChange={setData}
+
                       className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
                     />
                   </div>
@@ -164,8 +221,10 @@ const CustomForm = () =>{
                 <div className="flex items-center gap-x-3">
                   <input
                     id="push-nothing"
-                    name="push-notifications"
+                    name="pushNotifications"
                     type="radio"
+                    onChange={setData}
+
                     className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
                   />
                   <label htmlFor="push-nothing" className="block text-sm font-medium leading-6 text-gray-900">
@@ -184,6 +243,7 @@ const CustomForm = () =>{
         </button>
         <button
           type="submit"
+          onClick={sendPost}
           className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
         >
           Save
@@ -191,9 +251,9 @@ const CustomForm = () =>{
       </div>
     </div>
   )
-  
+
 }
 
 
 
-export default  CustomForm
+export default CustomForm
