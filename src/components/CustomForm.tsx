@@ -30,17 +30,25 @@ const CustomForm = () => {
   }
 
   async function sendPost() {
-    const url = "https://x3uwdimix54uvgjtzcxrj5p4fe0ywweo.lambda-url.ap-south-1.on.aws/";
+    const url = "https://v3v54ybew8.execute-api.ap-south-1.amazonaws.com/Prod/hello";
     try {
-      const response = await fetch(url, { method: "POST", body: JSON.stringify(userData) });
+      const response = await fetch(url, {
+        method: "POST", body: JSON.stringify(userData),   headers: {
+          "Access-Control-Allow-Origin": "*", // Allow all origins
+          "Access-Control-Allow-Headers": "Content-Type",
+          "Access-Control-Allow-Methods": "OPTIONS,POST,GET"
+      },
+      });
+      
       if (!response.ok) {
         throw new Error(`Response status: ${response.status}`);
       }
-
       const json = await response.json();
-      console.log(json,"-----json");
+      console.log(json, "-----json");
+
     } catch (error) {
       console.error(error.message);
+      window.location.reload();
     }
   }
 
