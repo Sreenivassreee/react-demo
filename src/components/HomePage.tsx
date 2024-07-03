@@ -1,11 +1,16 @@
+// import CustomForm from '../components/CustomForm.tsx'
+
+import React from "react"
+import CustomForm from "./CustomForm"
+import Intro from "./Intro"
+
 const HomePage = () => {
-    return    <h1 className="text-3xl font-bold underline bg-red">
-            Hello world!
-        </h1>
-        
+
+
+    return <div>
+        <Intro/>
+        <CustomForm/>
+    </div>
     
-
-
 }
-
 export default HomePage
